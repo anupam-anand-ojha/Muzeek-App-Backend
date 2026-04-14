@@ -17,15 +17,17 @@ const createMusic = async (req, res) => {
         }
         
         const {title} = req.body;
-        const songFile = req.files.song[0];
-        const imageFile = req.files.image[0];
+       const songFile = req.files?.song?.[0];
+       const imageFile = req.files?.image?.[0];
 
         if(!songFile|| !imageFile){
-            return res.status(409).json({message: "song and image both field required"});
+            return res.status(400).json({message: "song and image both field required"});
         }
 
-        const songUpload = await uploadFiles(songFile.buffer)
-        const imageUpload = await uploadFiles(imageFile.buffer)
+       const songUpload = await uploadFiles(songFile.buffer.toString("base64"))
+       const imageUpload = await uploadFiles(imageFile.buffer.toString("base64"))
+
+
 
         const music = await musicModel.create({
             
